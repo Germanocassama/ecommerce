@@ -1,23 +1,22 @@
 <?php 
-
+// 1ª vendor autoload do composer é constate
 require_once("vendor/autoload.php");
-
-$app = new \Slim\Slim();
-
+//  Nossos namespaces, classes dentro do vendor que vamos precisar 
+use \Slim\Slim;
+use Hcode\page; // página principal de apresentação de conteúdos definido no composer.json
+$app = new Slim();
 $app->config('debug', true);
 
+
+// Criar rotas para nossas paginas 
 $app->get('/', function() {
-    // instanciar a classe sql
-	$sql = new Hcode\DB\sql();
+	$page = new page(); // New page cria uma página e coloca o header e setTpl correga o conteúdo que está dentro do index
 
-	$results = $sql->select("SELECT * FROM tb_users");
-
-	echo json_encode($results);
-
-	
+	$page->setTpl("index");// chamar a página index.html depois desta linha ele vai chamar o destrut para mostrar rodapé 
 
 });
 
+// Rodar rotas 
 $app->run();
 
  ?>

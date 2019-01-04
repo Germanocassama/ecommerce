@@ -16,6 +16,12 @@ $app->get('/', function() {
 
 });
 
+$app->get('/', function(){
+	$page = new page();
+
+	$page->setTpl("laranja.html");
+});
+
 // Rodar rotas 
 $app->run();
 

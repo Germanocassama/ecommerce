@@ -9,13 +9,13 @@ use Rain\TPL;
 class page{
 
 	private $tpl;
-	// criar variaveis que vão serem passadas por slim de acordo com as rotas nos contrutores e destrutores 
+	// criar variaveis que serão passadas por slim de acordo com as rotas nos contrutores e destrutores 
 	private $options = [];
 	private $defaults = [
 		"data"=>[]
 	];
 	public function __construct($opts = array()){
-		$this->options = array_merge($this->defaults, $opts); /* array_merge --> serve para mesclar, o último sobscreve anteriores*/
+		$this->options = array_merge($this->defaults, $opts); /* array_merge --> serve para mesclar, a última variável passada sobscreve anteriores*/
 		// configurar diretório
 	$config = array(
 

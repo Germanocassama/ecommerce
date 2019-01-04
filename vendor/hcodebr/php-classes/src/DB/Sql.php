@@ -22,6 +22,7 @@ class Sql {
 
 	}
 
+		// ASSOCIAR PARÂMETROS COM OS DADOS 
 	private function setParams($statement, $parameters = array())
 	{
 
@@ -33,6 +34,7 @@ class Sql {
 
 	}
 
+	// FUNÇÃO bindParam()
 	private function bindParam($statement, $key, $value)
 	{
 
@@ -40,22 +42,23 @@ class Sql {
 
 	}
 
+	// Função query 
 	public function query($rawQuery, $params = array())
 	{
 
 		$stmt = $this->conn->prepare($rawQuery);
-
+		// Função setParams()
 		$this->setParams($stmt, $params);
 
 		$stmt->execute();
 
 	}
-
+	// Função select 
 	public function select($rawQuery, $params = array()):array
 	{
 
 		$stmt = $this->conn->prepare($rawQuery);
-
+		// Função setParams()
 		$this->setParams($stmt, $params);
 
 		$stmt->execute();

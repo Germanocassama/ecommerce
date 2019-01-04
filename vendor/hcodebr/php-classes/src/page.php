@@ -14,12 +14,12 @@ class page{
 	private $defaults = [
 		"data"=>[]
 	];
-	public function __construct($opts = array()){
+	public function __construct($opts = array(), $tpl_dir = "/views/"){
 		$this->options = array_merge($this->defaults, $opts); /* array_merge --> serve para mesclar, a última variável passada sobscreve anteriores*/
 		// configurar diretório
 	$config = array(
 
-		"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"]."/views/",
+		"tpl_dir"       => $_SERVER["DOCUMENT_ROOT"].$tpl_dir,
 		// $_SERVER["DOCUMENT_ROOT"]."/views/" --> Procur no diretório root (principal) do projeto o tamplate views
 		"cache_dir"     => $_SERVER["DOCUMENT_ROOT"]."/views-cache/",
 		"debug"         => false // set to false to improve the speed

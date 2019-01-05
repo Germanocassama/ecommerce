@@ -12,6 +12,8 @@ class page{
 	// criar variaveis que serão passadas por slim de acordo com as rotas nos contrutores e destrutores 
 	private $options = [];
 	private $defaults = [
+		"header"=>true,
+		"footer"=>true,
 		"data"=>[]
 	];
 	public function __construct($opts = array(), $tpl_dir = "/views/"){ 
@@ -30,7 +32,8 @@ class page{
 	$this->tpl = new TPL; // instanciar tpl com $this para que possa ser acessado nos outros atributos e métodos 
 	$this->setData($this->options["data"]); // chamar a função setData() e acessar informaçoes que estão dentro do array data
 	// Cabeçalho da nossa página
-	$this->tpl->draw("header");  // Draw é um método do tpl por isso usamsos  tpl->draw("header")
+	// se a opção header for chamado então carrega o header
+	if($this->options["header"] === true) $this->tpl->draw("header");  /* Draw é um método do tpl por isso usamsos  tpl->draw("header")*/
 }
 	
 	// Criar método setData para acessar os dados 
@@ -55,7 +58,8 @@ class page{
 
 	public function __destruct()
 	{
-		$this->tpl->draw("footer"); // rodapé da página 
+		// se a opção footer foi chamado então carrega o footer
+		if($this->options["footer"] === true) $this->tpl->draw("footer"); // rodapé da página 
 
 	}
 }

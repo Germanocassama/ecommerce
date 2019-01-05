@@ -1,5 +1,5 @@
 <?php 
-session_start();
+session_start();// iniciar sessao
 // 1ª vendor autoload do composer é constate
 require_once("vendor/autoload.php");
 //  Nossos namespaces, classes dentro do vendor que vamos precisar 
@@ -31,7 +31,7 @@ $app->get('/admin', function() {
 
 });
 
-// Página de admin
+// Página de login
 $app->get('/admin/login', function() {
 	$page = new pageAdmin([
 		// desablitar a chamada automatica do header e do footer
@@ -41,7 +41,6 @@ $app->get('/admin/login', function() {
 	$page->setTpl("login");
 
 });
-
 // receber o login e validar 
 $app->post('/admin/login', function(){
 	// metodo statico
@@ -50,19 +49,13 @@ $app->post('/admin/login', function(){
 	header("Location: /admin");
 	exit;
 });
-
+// rota de logout
 $app->get('/admin/logout', function(){
 	User::logout();
-
-	header("Location: /admin/login");
+	header("Location: /admin/login
+		");
 	exit;
-
 });
-
-
-
-
-
 // Rodar rotas 
 $app->run();
 

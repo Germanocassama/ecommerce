@@ -4,7 +4,7 @@
 	use \Hcode\DB\sql; // namespace sql
 
 	class User extends Model{
-		const SESSION = "User";
+		const SESSION = "User"; // difinir variável de sessão
 		public static function login($login, $password)
 		{
 			$sql = new sql();
@@ -35,7 +35,7 @@
 			}
 		}
 
-		public static function verifyLogin($inadmin = true)// verificar se está logado no admin
+		public static function verifyLogin($inadmin = true)// verificar se usuário está logado no admin
 		{ 
 			if(
 				// se a sessão não existir 

@@ -5,7 +5,7 @@ namespace Hcode;
 class Model{
 	private $values = [];
 
-	public function __call($name, $args) // $args são valores passados por este atributo
+	public function __call($name, $args) // os valores são passados no atributo $args
 	{
 		$method = substr($name, 0, 3); // a partir de posição zero traz 3 valores (0, 1, 2)
 		// descobrir o nome do campo que foi chamado
@@ -31,7 +31,7 @@ class Model{
 		}
 	}
 
-	// função get value serve para recuperar os valores 
+	// função getvalues serve para recuperar os valores 
 	public function getValues()
 	{
 		return $this->values;

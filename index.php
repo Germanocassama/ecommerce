@@ -3,24 +3,24 @@
 require_once("vendor/autoload.php");
 //  Nossos namespaces, classes dentro do vendor que vamos precisar 
 use \Slim\Slim;
-use Hcode\page; // página principal de apresentação de conteúdos definido no composer.json
-use Hcode\pageAdmin;
+use Hcode\page; // página principal 
+use Hcode\pageAdmin; // página de admin 
 $app = new Slim();
 $app->config('debug', true);
 
 
-// Criar rotas para nossas paginas 
+// #Criar rotas para nossas paginas 
+
+// Página de conteúdos index
 $app->get('/', function() {
 	$page = new page(); // New page cria uma página e coloca o header e setTpl correga o conteúdo que está dentro do index
-
-	$page->setTpl("index");// chamar a página index.html depois desta linha ele vai chamar o destrut para mostrar rodapé 
+	$page->setTpl("index");//Depois desta linha o destrut chamado para mostrar rodapé da nossa página 
 
 });
-
+// Página de admin
 $app->get('/admin', function() {
-	$page = new pageAdmin(); // New page cria uma página e coloca o header e setTpl correga o conteúdo que está dentro do index
-
-	$page->setTpl("index");// chamar a página index.html depois desta linha ele vai chamar o destrut para mostrar rodapé 
+	$page = new pageAdmin(); 
+	$page->setTpl("index");
 
 });
 

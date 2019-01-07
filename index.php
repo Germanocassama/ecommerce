@@ -8,23 +8,18 @@ use Hcode\page; // página principal
 use Hcode\pageAdmin; // página de admin 
 use Hcode\Model\User;
 
-
-
 $app = new Slim();
-$app->config('debug', true);
-
-
-// #Criar rotas para nossas paginas 
+$app->config('debug', true); 
 
 // Página de conteúdos index
 $app->get('/', function() {
 	$page = new page(); // New page cria uma página e coloca o header e setTpl correga o conteúdo que está dentro do index
-	$page->setTpl("index");//Depois desta linha o destrut chamado para mostrar rodapé da nossa página 
+	$page->setTpl("index");//Depois desta linha o destrut é chamado para mostrar rodapé da página 
 
 });
 // Página de admin
 $app->get('/admin', function() {
-	// método statico 
+	// método statico para verificar se usuário está logado
 	User::verifyLogin();
 	$page = new pageAdmin(); 
 	$page->setTpl("index");
@@ -41,7 +36,7 @@ $app->get('/admin/login', function() {
 	$page->setTpl("login");
 
 });
-// receber o login e validar 
+// receber o login via post e validar 
 $app->post('/admin/login', function(){
 	// metodo statico
 	User::login($_POST["login"], $_POST["password"]);
@@ -52,10 +47,48 @@ $app->post('/admin/login', function(){
 // rota de logout
 $app->get('/admin/logout', function(){
 	User::logout();
-	header("Location: /admin/login
-		");
+	header("Location: /admin/login");
 	exit;
 });
+// users
+$app->get('/admin/users', function() {
+	User::verifyLogin();
+	$page = new pageAdmin(); 
+	$page->setTpl("users");
+
+});
+// users-create
+$app->get('/admin/users/create', function(){
+	User::verifyLogin();
+	$page = new pageAdmin(); 
+	$page->setTpl("users/create");
+
+});
+// users-update
+$app->get('/admin/users/:iduser', function($iduser){ // iduser--> passamos id do usuário que será alterado 
+	User::verifyLogin();
+	$page = new pageAdmin(); 
+	$page->setTpl("users-update");
+
+});
+
+// rota insert
+$app->post('/admin/users/create', function(){
+	User::verifyLogin();
+
+});
+// rota salvar update
+$app->post('/admin/users/:iduser', function($iduser){
+	User::verifyLogin();
+
+});
+// rota delete 
+$app->delete('/admin/users/:iduser', function($iduser){
+	User::verifyLogin();
+
+});
+
+
 // Rodar rotas 
 $app->run();
 

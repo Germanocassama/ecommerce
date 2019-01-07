@@ -20,25 +20,23 @@
 				
 			}
 			$data = $results[0]; // primeiro resultado encontrado na posição zero
-			// password_verify -> esta função recebi dois parâmetros 
-			if(password_verify($password, $data["despassword"]) === true)
+			// password_verify -> esta função espera dois parâmetros 
+			if (password_verify($password, $data["despassword"]) === true)
 			{
 				$user = new User();
 				$user->setData($data);
 				// criar sessão para saber se o usuário existe
-				$_SESSION[User::SESSION] = $user->getValues();// trazer os valores
-				
-
+				$_SESSION[User::SESSION] = $user->getValues();// trazer valores da sessão de usuário
 				return $user;
 			}else{
 				throw new \Exception("Usuário enexistente ou senha inválida."); 
 			}
 		}
 
-		public static function verifyLogin($inadmin = true)// verificar se usuário está logado no admin
+		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
 		{ 
 			if(
-				// se a sessão não existir 
+				// se sessão não existir 
 				!isset($_SESSION[User::SESSION])
 				||// se for falso
 				!$_SESSION[User::SESSION]
@@ -51,6 +49,8 @@
 				exit;
 			}
 		}
+
+				
 		// função logout
 		public static function logout()
 	{

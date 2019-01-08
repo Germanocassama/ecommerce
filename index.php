@@ -51,39 +51,40 @@ $app->get('/admin/logout', function(){
 	exit;
 });
 // users
-$app->get('/admin/users', function() {
+$app->get("/admin/users", function() {
 	User::verifyLogin();
 	$page = new pageAdmin(); 
 	$page->setTpl("users");
 
 });
+
 // users-create
-$app->get('/admin/users/create', function(){
+$app->get("/admin/users/create", function(){
 	User::verifyLogin();
 	$page = new pageAdmin(); 
-	$page->setTpl("users/create");
+	$page->setTpl("users-create");
 
 });
 // users-update
-$app->get('/admin/users/:iduser', function($iduser){ // iduser--> passamos id do usuário que será alterado 
+$app->get("/admin/users/:iduser", function($iduser){ 
 	User::verifyLogin();
 	$page = new pageAdmin(); 
 	$page->setTpl("users-update");
 
 });
 
-// rota insert
-$app->post('/admin/users/create', function(){
+//insert
+$app->post("/admin/users/create", function(){
 	User::verifyLogin();
 
 });
-// rota salvar update
-$app->post('/admin/users/:iduser', function($iduser){
+//salvar update
+$app->post("/admin/users/:iduser", function($iduser){
 	User::verifyLogin();
 
 });
-// rota delete 
-$app->delete('/admin/users/:iduser', function($iduser){
+//delete 
+$app->delete("/admin/users/:iduser", function($iduser){
 	User::verifyLogin();
 
 });

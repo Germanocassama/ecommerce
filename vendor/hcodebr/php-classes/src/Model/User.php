@@ -16,17 +16,17 @@
 			{
 				
 				throw new \Exception("Usuário enexistente ou senha inválida."); 
-				// usamos barra invertidade pk o nosso Exception esta no raiz
+				//barra invertidade pk o nosso Exception esta no raiz
 				
 			}
-			$data = $results[0]; // primeiro resultado encontrado na posição zero
-			// password_verify -> esta função espera dois parâmetros 
+			$data = $results[0]; 
+
 			if (password_verify($password, $data["despassword"]) === true)
 			{
 				$user = new User();
 				$user->setData($data);
-				// criar sessão para saber se o usuário existe
-				$_SESSION[User::SESSION] = $user->getValues();// trazer valores da sessão de usuário
+				// verificar se o usuário existe na sessão 
+				$_SESSION[User::SESSION] = $user->getValues();// capturar valores da sessão de usuário
 				return $user;
 			}else{
 				throw new \Exception("Usuário enexistente ou senha inválida."); 

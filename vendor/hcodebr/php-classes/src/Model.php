@@ -30,7 +30,7 @@ class Model{
 			// obs: lembra que o nome do campo é recebido no campo $key
 			$this->{"set".$key}($value);
 			//  {"set".$key} => set é uma string mas como está entre chaves {} é um método mágico 
-			//  ($value) => são valores
+			
 		}
 	}
 
@@ -39,6 +39,8 @@ class Model{
 	{
 		return $this->values;
 	}
+
+	
 }
 
  ?>

@@ -34,7 +34,9 @@ use \Hcode\Mailer;
 				return $user;
 			}else{
 				throw new \Exception("Usuário enexistente ou senha inválida."); 
+				
 			}
+
 		}
 
 		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
@@ -127,7 +129,7 @@ use \Hcode\Mailer;
 			));
 		}
 		// function getForgot 
-					public static function getForgot($email, $inadmin = true)
+			public static function getForgot($email, $inadmin = true)
 			{
 			     $sql = new Sql();
 			     $results = $sql->select("
@@ -205,22 +207,21 @@ use \Hcode\Mailer;
 			     }
 			 }
 			 // Atualizar nova senha de recuperação 
-			 public static function setFogotUsed($idrecovery)
-				{
-					$sql = new Sql();
-					$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(
-						":idrecovery"=>$idrecovery
-					));
-				}
-				// carregar os dados do user
-				public function setPassword($password)
-				{
-					$sql = new Sql();
-					$sql->query("UPDATE tb_users SET despassword = :password WHERE iduser = :iduser", array(
-						":password"=>$password,
-						":iduser"=>$this->getiduser()
-					));
-				}
+			public static function setFogotUsed($idrecovery)
+			{
+				$sql = new Sql();
+				$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(
+					":idrecovery"=>$idrecovery
+				));
+			}
+			public function setPassword($password)
+			{
+				$sql = new Sql();
+				$sql->query("UPDATE tb_users SET despassword = :password WHERE iduser = :iduser", array(
+					":password"=>$password,
+					":iduser"=>$this->getiduser()
+				));
+			}
 				
 }
 ?>

@@ -7,15 +7,12 @@ use \Slim\Slim;
 use Hcode\page; // página principal 
 use Hcode\pageAdmin; // página de admin 
 use Hcode\Model\User;
-
 $app = new Slim();
 $app->config('debug', true); 
-
 // Página de conteúdos index
 $app->get('/', function() {
 	$page = new page(); // New page cria uma página e coloca o header e setTpl correga o conteúdo que está dentro do index
 	$page->setTpl("index");//Depois desta linha o destrut é chamado para mostrar rodapé da página 
-
 });
 // Página de admin
 $app->get('/admin', function() {
@@ -23,9 +20,7 @@ $app->get('/admin', function() {
 	User::verifyLogin();
 	$page = new pageAdmin(); 
 	$page->setTpl("index");
-
 });
-
 // Página de login
 $app->get('/admin/login', function() {
 	$page = new pageAdmin([
@@ -33,7 +28,6 @@ $app->get('/admin/login', function() {
 		"footer"=>false
 	]); 
 	$page->setTpl("login");
-
 });
 // receber o login via post e validar 
 $app->post('/admin/login', function(){
@@ -49,7 +43,6 @@ $app->get('/admin/logout', function(){
 	header("Location: /admin/login");
 	exit;
 });
-
 // Página users 
 $app->get("/admin/users", function(){
 	User::verifyLogin();
@@ -58,16 +51,12 @@ $app->get("/admin/users", function(){
 	$page->setTpl("users", array(
 		"users"=>$users
 	));
-
 });
-
 // create 
 $app->get("/admin/users/create", function(){
 	User::verifyLogin();
 	$page = new pageAdmin();
 	$page->setTpl("users-create");
-
-
 });
 // Delete 
 $app->get("/admin/users/:iduser/delete", function($iduser){
@@ -77,9 +66,7 @@ $app->get("/admin/users/:iduser/delete", function($iduser){
 	$user->delete();
 	header("Location: /admin/users");
 	exit;
-
 });
-
 // update 
 $app->get('/admin/users/:iduser', function($iduser){
    User::verifyLogin();
@@ -91,17 +78,21 @@ $app->get('/admin/users/:iduser', function($iduser){
     ));
  
 });
-
 // salvar create  
-$app->post("/admin/users/create", function(){
-	User::verifyLogin();
+$app->post("/admin/users/create", function () {
+ 	User::verifyLogin();
 	$user = new User();
-	$_POST["inadmin"] = (isset($_POST["inadmin"]))?1:0; // verificar se é um usuário admin 
-	$user->setData($_POST);
+ 	$_POST["inadmin"] = (isset($_POST["inadmin"])) ? 1 : 0;
+ 	// criar rest do password
+ 	$_POST['despassword'] = password_hash($_POST["despassword"], PASSWORD_DEFAULT, [
+
+ 		"cost"=>12
+
+ 	]);
+ 	$user->setData($_POST);
 	$user->save();
 	header("Location: /admin/users");
-	exit;
-	
+ 	exit;
 
 });
 // salvar update
@@ -114,7 +105,6 @@ $app->post("/admin/users/:iduser", function($iduser){
 	$user->update();
 	header("Location: /admin/users");
 	exit;
-
 });
  
  ////////////////////// admin esqueceu a senha ////////////////////////////////////////////
@@ -125,9 +115,7 @@ $app->get('/admin/forgot', function() {
 		"footer"=>false
 	]); 
 	$page->setTpl("forgot");
-
 });
-
 // receber dados 
 $app->post("/admin/forgot", function(){
 	$user = User::getForgot($_POST["email"]);
@@ -140,9 +128,7 @@ $app->get("/admin/forgot/sent", function(){
 		"footer"=>false
 	]); 
 	$page->setTpl("forgot-sent");
-
 });
-
 $app->get('/admin/forgot/reset',function(){
     $user = User::validForgotDecrypt($_GET["code"]);
     $page = new PageAdmin([
@@ -154,11 +140,9 @@ $app->get('/admin/forgot/reset',function(){
       "code"=>$_GET["code"]
     ));
 });
-
-
 $app->post("/admin/forgot/reset", function (){
 	$forgot = User::validForgotDecrypt($_POST["code"]);
-	User::setForgotUsed($forgot["idrecovery"]);
+	User::setFogotUsed($forgot["idrecovery"]);
 	$user = new User();
 	$user->get((int)$forgot["iduser"]);
 	// criar rest do password
@@ -172,7 +156,5 @@ $app->post("/admin/forgot/reset", function (){
 	]);
 	$page->setTpl("forgot-reset-success");
 });
-
 $app->run();
-
  ?>

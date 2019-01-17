@@ -3,16 +3,13 @@ namespace Hcode\Model;
 use \Hcode\DB\Sql;
 use \Hcode\Model;
 use \Hcode\Mailer;
-
 	class User extends Model
 	{
 		const SESSION = "User"; 
 	    const SECRET = "HcodePhp7_Secret"; // chave de cryptografia 
-
 		public static function login($login, $password)
 		{
 			$sql = new sql();
-
 			$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
 				":LOGIN"=>$login
 			));
@@ -24,7 +21,6 @@ use \Hcode\Mailer;
 				
 			}
 			$data = $results[0]; 
-
 			if (password_verify($password, $data["despassword"]) === true)
 			{
 				$user = new User();
@@ -36,9 +32,7 @@ use \Hcode\Mailer;
 				throw new \Exception("Usuário enexistente ou senha inválida."); 
 				
 			}
-
 		}
-
 		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
 		{ 
 			if(
@@ -55,25 +49,19 @@ use \Hcode\Mailer;
 				exit;
 			}
 		}
-
 				
 		// função logout
 		public static function logout()
 		{
 				$_SESSION[User::SESSION] = NULL;
 		}
-
 		public static function listAll(){
 			$sql = new sql();
-
 			return $sql->select("SELECT * FROM  tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 		}
-
 		public function save()
 		{
-
 		$sql = new Sql();
-
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 			":desperson"=>$this->getdesperson(),
 			":deslogin"=>$this->getdeslogin(),
@@ -82,10 +70,9 @@ use \Hcode\Mailer;
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
 		));
-
 		$this->setData($results[0]);
 		}
-
+		// obter id do user 
 		public function get($iduser)
 			{
 			 
@@ -101,10 +88,10 @@ use \Hcode\Mailer;
 			 
 			}
 
+			// atualizar dados do user
 		public function update()
 		{
 			$sql = new Sql();
-
 			$results = $sql->select("CALL sp_usersupdate_save(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 				
 				":iduser"=>$this->getiduser(),
@@ -115,15 +102,13 @@ use \Hcode\Mailer;
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
 			));
-
 			$this->setData($results[0]);
-
 		}
 
+		// deletar user
 		public function delete()
 		{
 			$sql = new sql();
-
 			$sql->query("CALL sp_users_delete(:iduser)", array(
 				":iduser"=>$this->getiduser()
 			));

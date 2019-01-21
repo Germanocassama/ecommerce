@@ -4,6 +4,7 @@
 namespace Hcode;
 // Definir Namespace do Rain TPL
 use Rain\TPL;
+use \Hcode\Model\User;
 
 
 class page{
@@ -29,7 +30,8 @@ class page{
 
 	Tpl::configure( $config);
 	// criar classes tpl 
-	$this->tpl = new TPL; // instanciar tpl com $this para que possa ser acessado nos outros atributos e métodos 
+	$this->tpl = new TPL; // instanciar tpl com $this para que possa ser acessado nos outros atributos e métodos
+	 
 	$this->setData($this->options["data"]); // chamar a função setData() e acessar informaçoes que estão dentro do array data
 	// Cabeçalho da nossa página
 	// se a opção header for chamado então carrega o header

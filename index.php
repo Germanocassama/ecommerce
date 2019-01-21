@@ -158,17 +158,19 @@ $app->post("/admin/forgot/reset", function (){
 	$page->setTpl("forgot-reset-success");
 });
 /////// Categorias //////////////////////////////////////////////////////////////////////////////
-// page categorias
+// Listar categorias
 $app->get("/admin/categories", function(){
 	User::verifyLogin();
+	// método $categories -> serve para acessar todas categorias no banco de dados 
 	$categories = Category::listAll(); 
 	$page = new PageAdmin();
 	$page->setTpl("categories",[
+		// array de categorias 
 		'categories'=>$categories
 	]);
 
 });
-// tela de categorias 
+// link categoria 
 $app->get("/admin/categories/create", function(){
 	User::verifyLogin();
 	$page = new PageAdmin();
@@ -197,7 +199,7 @@ $app->get("/admin/categories/:idcategory/delete", function($idcategory){
 	exit;
 });
 
-// Carregar categorias  
+// Carregar categorias para atualizar 
 $app->get("/admin/categories/:idcategory", function($idcategory){
 	User::verifyLogin();
 	$category = new Category();
@@ -205,6 +207,7 @@ $app->get("/admin/categories/:idcategory", function($idcategory){
 	$page = new PageAdmin();
 
 	$page->setTpl("categories-update",[
+		// array de categorias
 		'category'=>$category->getValues()
 	]);
 });
@@ -212,12 +215,28 @@ $app->get("/admin/categories/:idcategory", function($idcategory){
 // atualizar categorias 
 $app->post("/admin/categories/:idcategory", function($idcategory){
 	User::verifyLogin();
-	$category = new Category();
-	$category->get((int)$idcategory);
-	$category->setData($_POST);
-	$category->save();
+	$category = new Category(); // criar uma categoria 
+	$category->get((int)$idcategory);// carregar categoria 
+	$category->setData($_POST); // inserir uma categoria 
+	$category->save(); // salvar categoria 
 	header("Location: /admin/categories");
 	exit;
+
+});
+
+$app->get("/categories/:idcategory", function($idcategory){
+	$category = new Category();
+	$category->get((int)$idcategory);
+
+	// chamar tamplate
+	$page = new page();
+	$page->setTpl("category", [
+		// carregar dados dentro da categoria 
+		'category'=>$category->getValues(),
+		// array de produtos 
+		'products'=>[]
+	]);
+
 
 });
 

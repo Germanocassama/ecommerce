@@ -30,6 +30,45 @@ $app->post("/admin/products/create", function(){
 	header("Location: /admin/products");
 	exit;
 });
+// criar produtos 
+$app->get("/admin/products/:idproduct", function($idproduct){
+	User::verifyLogin();
+	$page = new pageAdmin();
+	$product = new Product();
+	$product->get((int)$idproduct);
+
+	$page->setTpl("products-update", [
+		'product'=>$product->getvalues()
+	]);
+
+});
+// atualizar produtos 
+$app->post("/admin/products/:idproduct", function($idproduct){
+	User::verifyLogin();
+	$product = new Product();
+	$product->get((int)$idproduct);
+	$product->setData($_POST);
+	$product->save();
+	$product->setPhoto($_FILES["file"]);
+	header("Location: /admin/products");
+	exit;
+
+
+});
+// Deletar produtos 
+$app->get("/admin/products/:idproduct/delete", function($idproduct){
+	User::verifyLogin();
+	$page = new pageAdmin();
+	$product = new Product();
+	$product->get((int)$idproduct);
+	$product->delete();
+	header("Location: /admin/products");
+	exit;
+
+
+});
+
+
 
 
 ?>

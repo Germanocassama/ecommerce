@@ -45,6 +45,60 @@ class Product extends Model {
 				':idproduct'=>$this->getidproduct()
 			]);
 		}
+		// verificar se a foto existe
+		public function checkPhoto()
+		{
+		if (file_exists($_SERVER['DOCUMENT_ROOT']
+			.DIRECTORY_SEPARATOR."resourse"
+			.DIRECTORY_SEPARATOR."site"
+			.DIRECTORY_SEPARATOR."img"
+			.DIRECTORY_SEPARATOR."products"
+			.DIRECTORY_SEPARATOR.$this->getidproduct().".jpg"
+			)) {
+			$url = "/resourse/site/img/products/" . $this->getidproduct().".jpg";
+		} else {
+			$url = "/resourse/site/img/product.jpg";
+		}
+		return $this->setdesphoto($url);
+		}
+	// verificar foto pela classe product
+		public function getValues()
+		{
+		$this->checkPhoto();
+		$values = parent::getValues();
+		return $values;
+		}
+
+		public function setPhoto($file){
+			//verificar tipo de arquivo 
+			$extension = explode('.', $file['name']);
+			//depois do ponto é extensão do arquivo 
+			$extension = end($extension);
+			switch ($extension) {
+				case 'jpg':
+				case 'jpeg':
+				$image = imagecreatefromjpeg($file['tmp_name']);
+					break;
+					case 'gif':
+					$image = imagecreatefromgif($file['tmp_name']);
+					break;
+					case 'png':
+					$image = imagecreatefrompng($file['tmp_name']);
+					break;
+			}
+			$dist = $_SERVER['DOCUMENT_ROOT']
+			.DIRECTORY_SEPARATOR."resourse"
+			.DIRECTORY_SEPARATOR."site"
+			.DIRECTORY_SEPARATOR."img"
+			.DIRECTORY_SEPARATOR."products"
+			.DIRECTORY_SEPARATOR.$this->getidproduct().".jpg";
+
+			imagejpeg($image, $dist);
+			imagedestroy($image);
+			$this->checkPhoto();
+
+
+		}
 
 	}
 ?>

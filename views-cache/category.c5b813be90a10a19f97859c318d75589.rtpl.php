@@ -14,7 +14,7 @@
     <div class="zigzag-bottom"></div>
     <div class="container">
         <div class="row">
-            <!-- lop dos produtos que vai repetir -->
+            <!-- loop dos produtos a repetir -->
             <?php $counter1=-1;  if( isset($products) && ( is_array($products) || $products instanceof Traversable ) && sizeof($products) ) foreach( $products as $key1 => $value1 ){ $counter1++; ?>
 
             <div class="col-md-3 col-sm-6">

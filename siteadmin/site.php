@@ -1,9 +1,13 @@
 <?php
-use \Hcode\page; // página principal 
+use \Hcode\Page;
+use \Hcode\Model\Product;
 
-$app->get('', function(){
-	$page = new page();
-	$page->setTpl("index.php");
+$app->get('/', function() {
+	$products = Product::listAll();
+	$page = new Page();
+	$page->setTpl("index",[
+		'products'=>Product::checkList($products)
+	]);
 });
 
 ?>

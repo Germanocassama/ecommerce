@@ -7,10 +7,10 @@ $app->get("/admin/products", function(){
 	User::verifyLogin();
 	$products = Product::listAll();
 	$page = new pageAdmin();
-
 	$page->setTpl("products", [
 		"products"=>$products
 	]);
+	
 
 });
 // criar produtos 
@@ -30,7 +30,7 @@ $app->post("/admin/products/create", function(){
 	header("Location: /admin/products");
 	exit;
 });
-// criar produtos 
+// Obter produtos para atualizar
 $app->get("/admin/products/:idproduct", function($idproduct){
 	User::verifyLogin();
 	$page = new pageAdmin();

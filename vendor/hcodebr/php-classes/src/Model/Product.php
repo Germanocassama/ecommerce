@@ -5,13 +5,28 @@ use \Hcode\Model;
 use \Hcode\Mailer;
 class Product extends Model {
 		
+		// Listar produtos 
 		public static function listAll()
 		{
 			$sql = new Sql();
 			return $sql->select("SELECT * FROM tb_products ORDER BY desproduct");
 		}
 
+		public static function checkList($list)
+		{
+		foreach ($list as &$row) {
+			
+			$p = new Product();
+			$p->setData($row);
+			$row = $p->getValues();
+		}
+		return $list;
+		}
 
+		
+
+
+		// Salvar produtos 
 		public function save()
 		{
 			$sql = new Sql();
@@ -28,20 +43,24 @@ class Product extends Model {
 			));
 			$this->setData($results[0]);
 		}
-		
+
+		// obter produto
 		public function get($idproduct)
 		{
 			$sql = new Sql();
 			$results = $sql->select("SELECT * FROM tb_products WHERE idproduct = :idproduct", [
+				// baindParam
 				':idproduct'=>$idproduct
 			]);
 			$this->setData($results[0]);
 		}
 		
+		// apagar produto
 		public function delete()
 		{
 			$sql = new Sql();
 			$sql->query("DELETE FROM tb_products WHERE idproduct = :idproduct", [
+				// baindParam
 				':idproduct'=>$this->getidproduct()
 			]);
 		}
@@ -61,14 +80,14 @@ class Product extends Model {
 		}
 		return $this->setdesphoto($url);
 		}
-	// verificar foto pela classe product
+	// obter foto
 		public function getValues()
 		{
 		$this->checkPhoto();
 		$values = parent::getValues();
 		return $values;
 		}
-
+		// inserir foto 
 		public function setPhoto($file){
 			//verificar tipo de arquivo 
 			$extension = explode('.', $file['name']);

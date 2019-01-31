@@ -1,5 +1,6 @@
 <?php
-use \Hcode\pageAdmin; // página de admin 
+use \Hcode\page;
+use \Hcode\pageAdmin;
 use \Hcode\Model\User;
 use \Hcode\Model\Category;
  
@@ -7,7 +8,7 @@ use \Hcode\Model\Category;
 // Listar categorias
 $app->get("/admin/categories", function(){
 	User::verifyLogin();
-	// método $categories -> serve para acessar todas categorias no banco de dados 
+	// método static $categories -> serve para acessar todas categorias no banco de dados 
 	$categories = Category::listAll(); 
 	$page = new PageAdmin();
 	$page->setTpl("categories",[
@@ -16,7 +17,7 @@ $app->get("/admin/categories", function(){
 	]);
 
 });
-// link categoria 
+// carregar página categoria 
 $app->get("/admin/categories/create", function(){
 	User::verifyLogin();
 	$page = new PageAdmin();
@@ -49,22 +50,22 @@ $app->get("/admin/categories/:idcategory/delete", function($idcategory){
 $app->get("/admin/categories/:idcategory", function($idcategory){
 	User::verifyLogin();
 	$category = new Category();
-	$category->get((int)$idcategory);
 	$page = new PageAdmin();
-
+	$category->get((int)$idcategory);
+	
 	$page->setTpl("categories-update",[
 		// array de categorias
 		'category'=>$category->getValues()
 	]);
 });
 
-// atualizar categorias 
+// salvar atualização categorias 
 $app->post("/admin/categories/:idcategory", function($idcategory){
 	User::verifyLogin();
-	$category = new Category(); // criar uma categoria 
-	$category->get((int)$idcategory);// carregar categoria 
-	$category->setData($_POST); // inserir uma categoria 
-	$category->save(); // salvar categoria 
+	$category = new Category(); 
+	$category->get((int)$idcategory);
+	$category->setData($_POST);  
+	$category->save();
 	header("Location: /admin/categories");
 	exit;
 
@@ -72,17 +73,13 @@ $app->post("/admin/categories/:idcategory", function($idcategory){
 
 $app->get("/categories/:idcategory", function($idcategory){
 	$category = new Category();
-	$category->get((int)$idcategory);
-
-	// chamar tamplate
 	$page = new page();
-	$page->setTpl("category", [
-		// carregar dados dentro da categoria 
+	$category->get((int)$idcategory);
+	$page->setTpl("category",[
 		'category'=>$category->getValues(),
 		// array de produtos 
 		'products'=>[]
 	]);
-
-
 });
+
 ?>

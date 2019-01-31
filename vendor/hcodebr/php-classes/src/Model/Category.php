@@ -60,5 +60,58 @@ use \Hcode\Mailer;
 			// implode -> converte um array para String 
 			file_put_contents($_SERVER['DOCUMENT_ROOT'].DIRECTORY_SEPARATOR."views".DIRECTORY_SEPARATOR."categories-menu.html",implode('', $html));
 		}
+
+		// Produtos categorias 
+		public function getProducts($related = true){
+		$sql = new sql();
+		
+			if ($related === true) {
+				// produtos relecionados 
+				return $sql->select("SELECT * FROM tb_products where idproduct IN(
+				select a.idproduct
+				FROM tb_products a
+				INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct
+				where b.idcategory = :idcategory
+
+						); 
+					",[
+						':idcategory'=>$this->getidcategory()
+					]);
+			}else{
+				// produtos não relecionados 
+					return $sql->select("
+					SELECT * FROM tb_products where idproduct NOT IN(
+					select a.idproduct
+					FROM tb_products a
+					INNER JOIN tb_productscategories b ON a.idproduct = b.idproduct
+					where b.idcategory = :idcategory
+
+					);
+
+				",[
+						':idcategory'=>$this->getidcategory()
+				]);
+			}
+
+		}
+
+		// addProduct
+		public function addProduct(Product $product)
+		{
+			$sql = new Sql();
+			$sql->query("INSERT INTO tb_productscategories (idcategory, idproduct) VALUES(:idcategory, :idproduct)", [
+				':idcategory'=>$this->getidcategory(),
+				':idproduct'=>$product->getidproduct()
+			]);
+		}
+		// removeProduct
+		public function removeProduct(Product $product)
+		{
+			$sql = new Sql();
+			$sql->query("DELETE FROM tb_productscategories WHERE idcategory = :idcategory AND idproduct = :idproduct", [
+				':idcategory'=>$this->getidcategory(),
+				':idproduct'=>$product->getidproduct()
+			]);
+		}
 	}
 ?>

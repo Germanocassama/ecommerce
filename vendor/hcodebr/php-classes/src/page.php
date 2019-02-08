@@ -35,7 +35,7 @@ class page{
 	$this->setData($this->options["data"]); // chamar a função setData() e acessar informaçoes que estão dentro do array data
 	// Cabeçalho da nossa página
 	// se a opção header for chamado então carrega o header
-	if($this->options["header"] === true) $this->tpl->draw("header");  /* Draw é um método do tpl por isso usamsos  tpl->draw("header")*/
+	if($this->options["header"] === true) $this->tpl->draw("header");  
 }
 	
 	// Criar método setData para acessar os dados 
@@ -48,7 +48,7 @@ class page{
 
 	
 	// Criar corpo da nossa página 
-	//$nome = nome das nossas paginas, $data = nossos dados 
+	//$nome = nome das nossas paginas, $data = os dados 
 	// $returnHTML = serve para retornar html ou mostrar conteúdo na tela 
 	public function setTpl($nome, $data = array(), $returnHTML = false)
 	{

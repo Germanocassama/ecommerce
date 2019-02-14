@@ -7,6 +7,44 @@ use \Hcode\Mailer;
 	{
 		const SESSION = "User"; 
 	    const SECRET = "HcodePhp7_Secret"; // chave de cryptografia 
+	    // verificar session de user
+	    public static function getFromSession(){
+	    	$user = new User();
+	    	if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {	    		
+
+	    		$user->setData($_SESSION[User::SESSION]);
+	    		
+	    	}
+	    	return $user;
+
+	    }
+	    // verificar login
+	    public static function checkLogin($inadmin = true){
+	    	if (// se sessão não existir 
+				!isset($_SESSION[User::SESSION])
+				||// se for falso
+				!$_SESSION[User::SESSION]
+				||// se o id não for maior que zero
+				!(int)$_SESSION[User::SESSION]["iduser"] > 0
+			){
+				// Não está logado
+	    		return false;
+	    	}else{
+	    		// verificar se é um admin
+	    		if ($inadmin === true && (bool)$_SESSION[User::SESSION]["inadmin"] === true) {
+	    			return true;
+
+	    			// se for um admin também pode ver o site sem precisar de entrar como admin 
+	    		}else if($inadmin === false){
+	    			return true;
+
+	    		}else{
+	    			return false;
+	    		}
+
+	    	}
+
+	    }
 		public static function login($login, $password)
 		{
 			$sql = new sql();
@@ -35,16 +73,7 @@ use \Hcode\Mailer;
 		}
 		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
 		{ 
-			if(
-				// se sessão não existir 
-				!isset($_SESSION[User::SESSION])
-				||// se for falso
-				!$_SESSION[User::SESSION]
-				||// se o id não for maior que zero
-				!(int)$_SESSION[User::SESSION]["iduser"] > 0
-				||// verificar se usuário pode acessar admin
-				(bool)$_SESSION[User::SESSION]["inadmin"] !== $inadmin
-			){
+			if(User::checkLogin($inadmin)){
 				header("Location: /admin/login");
 				exit;
 			}

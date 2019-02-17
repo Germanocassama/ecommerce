@@ -8,16 +8,14 @@ use \Hcode\Mailer;
 		const SESSION = "User"; 
 	    const SECRET = "HcodePhp7_Secret"; // chave de cryptografia 
 	    // verificar session de user
-	    public static function getFromSession(){
-	    	$user = new User();
-	    	if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {	    		
-
-	    		$user->setData($_SESSION[User::SESSION]);
-	    		
-	    	}
-	    	return $user;
-
-	    }
+	   public static function getFromSession()
+		{
+			$user = new User();
+			if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
+				$user->setData($_SESSION[User::SESSION]);
+			}
+			return $user;
+		}
 	    // verificar login
 	    public static function checkLogin($inadmin = true){
 	    	if (// se sessão não existir 
@@ -31,20 +29,17 @@ use \Hcode\Mailer;
 	    		return false;
 	    	}else{
 	    		// verificar se é um admin
-	    		if ($inadmin === true && (bool)$_SESSION[User::SESSION]["inadmin"] === true) {
-	    			return true;
+	    		if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
+				return true;
 
 	    			// se for um admin também pode ver o site sem precisar de entrar como admin 
-	    		}else if($inadmin === false){
-	    			return true;
-
-	    		}else{
-	    			return false;
-	    		}
-
-	    	}
-
-	    }
+	    		} else if ($inadmin === false) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 		public static function login($login, $password)
 		{
 			$sql = new sql();
@@ -71,6 +66,8 @@ use \Hcode\Mailer;
 				
 			}
 		}
+
+		// verificar login
 		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
 		{ 
 			if(User::checkLogin($inadmin)){
@@ -88,6 +85,7 @@ use \Hcode\Mailer;
 			$sql = new sql();
 			return $sql->select("SELECT * FROM  tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 		}
+		///
 		public function save()
 		{
 		$sql = new Sql();

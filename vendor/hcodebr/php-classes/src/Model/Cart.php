@@ -82,9 +82,7 @@ class Cart extends Model {
 			':idcart'=>$this->getidcart(),
 			':idproduct'=>$product->getidproduct()
 		]);
-		$this->getCalculateTotal();
 	}
-
 	// Remover produto do carrinho 
 	public function removeProduct(Product $product, $all = false)
 	{
@@ -101,23 +99,21 @@ class Cart extends Model {
 				':idproduct'=>$product->getidproduct()
 			]);
 		}
-		$this->getCalculateTotal();
 	}
 
 	// Listar todos produtos dentro do carrinho 
-	public function getProducts()
-	{
-		$sql = new Sql();
-		$rows = $sql->select("
-			SELECT b.idproduct, b.desproduct , b.vlprice, b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl, COUNT(*) AS nrqtd, SUM(b.vlprice) AS vltotal 
-			FROM tb_cartsproducts a 
-			INNER JOIN tb_products b ON a.idproduct = b.idproduct 
-			WHERE a.idcart = :idcart AND a.dtremoved IS NULL 
-			GROUP BY b.idproduct, b.desproduct , b.vlprice, b.vlwidth, b.vlheight, b.vllength, b.vlweight, b.desurl 
-			ORDER BY b.desproduct
-		", [
-			':idcart'=>$this->getidcart()
-		]);
+	public function getProducts(){
+     $sql = new Sql();
+     $rows = $sql->select("
+         SELECT b.idproduct,b.desproduct,b.vlprice,b.vlwidth,b.vlheight,b.vllength,b.vlweight,b.desurl,
+         COUNT(*) AS nrqtd,SUM(b.vlprice) as vltotal
+         FROM tb_cartsproducts a 
+         INNER JOIN tb_products b USING (idproduct) 
+         WHERE a.idcart = :idcart AND a.dtremoved IS NULL
+         GROUP BY b.idproduct,b.desproduct,b.vlprice,b.vlwidth,b.vlheight,b.vllength,b.vlweight,b.desurl
+         ORDER BY b.desproduct", [
+             ":idcart"=>$this->getidcart()
+     ]);
 		return Product::checkList($rows);
 	}
 		

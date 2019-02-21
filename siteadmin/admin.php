@@ -70,7 +70,7 @@ $app->get('/admin/forgot/reset',function(){
 });
 $app->post("/admin/forgot/reset", function (){
 	$forgot = User::validForgotDecrypt($_POST["code"]);
-	User::setFogotUsed($forgot["idrecovery"]);
+	User::setForgotUsed($forgot["idrecovery"]);
 	$user = new User();
 	$user->get((int)$forgot["iduser"]);
 	// criar rest do password

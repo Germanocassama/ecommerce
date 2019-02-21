@@ -25,7 +25,7 @@
                             Error!
                             </div>
 
-                            <table cellspacing="0" class="shop_table cart">
+                               <table cellspacing="0" class="shop_table cart">
                                 <thead>
                                     <tr>
                                         <th class="product-remove">&nbsp;</th>
@@ -49,11 +49,11 @@
                                         </td>
 
                                         <td class="product-name">
-                                            <a href="/product/<?php echo htmlspecialchars( $value1["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a> 
+                                            <a href="/products/<?php echo htmlspecialchars( $value1["desurl"], ENT_COMPAT, 'UTF-8', FALSE ); ?>"><?php echo htmlspecialchars( $value1["desproduct"], ENT_COMPAT, 'UTF-8', FALSE ); ?></a> 
                                         </td>
 
                                         <td class="product-price">
-                                            <span class="amount">R$<?php echo formatPrice($value1["vlprice"]); ?></span> 
+                                            <span class="amount"><?php echo formatPrice($value1["vlprice"]); ?>€</span> 
                                         </td>
 
                                         <td class="product-quantity">
@@ -65,7 +65,7 @@
                                         </td>
 
                                         <td class="product-subtotal">
-                                            <span class="amount">R$<?php echo formatPrice($value1["vltotal"]); ?></span> 
+                                            <span class="amount"><?php echo formatPrice($value1["vltotal"]); ?>€</span> 
                                         </td>
                                     </tr>
                                     <?php } ?>

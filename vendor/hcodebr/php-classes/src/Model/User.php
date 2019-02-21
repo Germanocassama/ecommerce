@@ -70,7 +70,7 @@ use \Hcode\Mailer;
 		// verificar login
 		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
 		{ 
-			if(User::checkLogin($inadmin)){
+			if (!User::checkLogin($inadmin)){
 				header("Location: /admin/login");
 				exit;
 			}
@@ -219,13 +219,15 @@ use \Hcode\Mailer;
 			     }
 			 }
 			 // Atualizar nova senha de recuperação 
-			public static function setFogotUsed($idrecovery)
+			public static function setForgotUsed($idrecovery)
 			{
 				$sql = new Sql();
 				$sql->query("UPDATE tb_userspasswordsrecoveries SET dtrecovery = NOW() WHERE idrecovery = :idrecovery", array(
 					":idrecovery"=>$idrecovery
 				));
 			}
+
+			// Update password
 			public function setPassword($password)
 			{
 				$sql = new Sql();

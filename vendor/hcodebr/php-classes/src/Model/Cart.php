@@ -116,6 +116,23 @@ class Cart extends Model {
      ]);
 		return Product::checkList($rows);
 	}
+
+	public function get(int $idcart)
+{
+ 
+    $sql = new Sql();
+ 
+    $results = $sql->select("SELECT * FROM tb_carts WHERE idcart = :idcart", [
+        ':idcart'=>$idcart
+    ]);
+ 
+    if (count($results) > 0) {
+ 
+        $this->setData($results[0]);
+ 
+    }
+ 
+}
 		
 }
 ?>

@@ -85,7 +85,7 @@ use \Hcode\Mailer;
 			$sql = new sql();
 			return $sql->select("SELECT * FROM  tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 		}
-		///
+		//
 		public function save()
 		{
 		$sql = new Sql();
@@ -140,7 +140,7 @@ use \Hcode\Mailer;
 				":iduser"=>$this->getiduser()
 			));
 		}
-		// function getForgot 
+		// function getForgot (user esqueceu a senha)
 			public static function getForgot($email, $inadmin = true)
 			{
 			     $sql = new Sql();
@@ -178,7 +178,7 @@ use \Hcode\Mailer;
 			             } else {
 			                 $link = "http://www.lojacommerce.com.pt/forgot/reset?code=$result";
 			             } 
-			             $mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha da Hcode Store", "forgot", array(
+			             $mailer = new Mailer($data['desemail'], $data['desperson'], "Redefinir senha de visão digital", "forgot", array(
 			                 "name"=>$data['desperson'],
 			                 "link"=>$link
 			             )); 

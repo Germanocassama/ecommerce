@@ -5,8 +5,10 @@ use \Hcode\Model;
 use \Hcode\Mailer;
 	class User extends Model
 	{
-		const SESSION = "User"; 
-	    const SECRET = "HcodePhp7_Secret"; // chave de cryptografia 
+		const SESSION = "User";
+		const SECRET = "HcodePhp7_Secret"; // chave de cryptografia 
+		const ERROR = "UserError";
+		const ERROR_REGISTER = "UserErrorRegister";
 	    // verificar session de user
 	   public static function getFromSession()
 		{
@@ -16,65 +18,71 @@ use \Hcode\Mailer;
 			}
 			return $user;
 		}
+
 	    // verificar login
 	    public static function checkLogin($inadmin = true){
-	    	if (// se sessão não existir 
+	    	if (// se sessão não foi definido - não esta logado  
 				!isset($_SESSION[User::SESSION])
-				||// se for falso
+				||// se ela foi definida mas esta fazia também não esta logado
 				!$_SESSION[User::SESSION]
-				||// se o id não for maior que zero
+				||//se ela for definida e não for vazia mas o id de usuario não é maior que zero também não esta logado
 				!(int)$_SESSION[User::SESSION]["iduser"] > 0
 			){
 				// Não está logado
 	    		return false;
 	    	}else{
-	    		// verificar se é um admin
+	    		// verificar se é um admin e se é acessa painel admin 
 	    		if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
 				return true;
 
-	    			// se for um admin também pode ver o site sem precisar de entrar como admin 
+	    			// se não for um admin pode visualizar parte do cliente 
 	    		} else if ($inadmin === false) {
 				return true;
 			} else {
 				return false;
 			}
 		}
-	}
+		}
+		// verificar em que painel o usuario deve ser redirecionado
+		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
+		{ 
+			if (!User::checkLogin($inadmin)){
+				if ($inadmin) {
+					header("Location: /admin/login");
+				}else{
+					header("Location: /login");
+				}
+				exit;
+			}
+		}
+		
 		public static function login($login, $password)
 		{
-			$sql = new sql();
-			$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(
+			$sql = new Sql();
+			$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(
 				":LOGIN"=>$login
-			));
-			if (count($results) === 0) 
+			)); 
+			if (count($results) === 0)
 			{
-				
-				throw new \Exception("Usuário enexistente ou senha inválida."); 
+				throw new \Exception("Usuário inexistente ou senha inválida.");
 				//barra invertidade pk o nosso Exception esta no raiz
-				
 			}
-			$data = $results[0]; 
+			$data = $results[0];
 			if (password_verify($password, $data["despassword"]) === true)
 			{
 				$user = new User();
+				$data['desperson'] = utf8_encode($data['desperson']);
 				$user->setData($data);
 				// verificar se o usuário existe na sessão 
 				$_SESSION[User::SESSION] = $user->getValues();// capturar valores da sessão de usuário
 				return $user;
-			}else{
-				throw new \Exception("Usuário enexistente ou senha inválida."); 
-				
+			} else {
+				throw new \Exception("Usuário inexistente ou senha inválida.");
 			}
 		}
 
-		// verificar login
-		public static function verifyLogin($inadmin = true)//$inadmin-> verificar se usuário está logado no admin
-		{ 
-			if (!User::checkLogin($inadmin)){
-				header("Location: /admin/login");
-				exit;
-			}
-		}
+
+
 				
 		// função logout
 		public static function logout()
@@ -90,9 +98,9 @@ use \Hcode\Mailer;
 		{
 		$sql = new Sql();
 		$results = $sql->select("CALL sp_users_save(:desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
-			":desperson"=>$this->getdesperson(),
+			":desperson"=>utf8_decode($this->getdesperson()),
 			":deslogin"=>$this->getdeslogin(),
-			":despassword"=>$this->getdespassword(),
+			":despassword"=>User::getPasswordHash($this->getdespassword()),
 			":desemail"=>$this->getdesemail(),
 			":nrphone"=>$this->getnrphone(),
 			":inadmin"=>$this->getinadmin()
@@ -110,7 +118,7 @@ use \Hcode\Mailer;
 			 ));
 			 
 			 $data = $results[0];
-			 
+			 $data['desperson'] = utf8_encode($data['desperson']);
 			 $this->setData($data);
 			 
 			}
@@ -122,9 +130,9 @@ use \Hcode\Mailer;
 			$results = $sql->select("CALL sp_usersupdate_save(:iduser, :desperson, :deslogin, :despassword, :desemail, :nrphone, :inadmin)", array(
 				
 				":iduser"=>$this->getiduser(),
-				":desperson"=>$this->getdesperson(),
+				":desperson"=>utf8_decode($this->getdesperson()),
 				":deslogin"=>$this->getdeslogin(),
-				":despassword"=>$this->getdespassword(),
+				":despassword"=>User::getPasswordHash($this->getdespassword()),
 				":desemail"=>$this->getdesemail(),
 				":nrphone"=>$this->getnrphone(),
 				":inadmin"=>$this->getinadmin()
@@ -235,6 +243,38 @@ use \Hcode\Mailer;
 					":password"=>$password,
 					":iduser"=>$this->getiduser()
 				));
+			}
+
+			// verificar erros 
+			public static function setError($msg)
+			{
+				$_SESSION[User::ERROR] = $msg;
+			}
+			public static function getError()
+			{
+				$msg = (isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]) ? $_SESSION[User::ERROR] : '';
+				User::clearError();
+				return $msg;
+			}
+			public static function clearError()
+			{
+				$_SESSION[User::ERROR] = NULL;
+			}
+			public static function getErrorRegister()
+			{
+				$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+				User::clearErrorRegister();
+				return $msg;
+			}
+			public static function clearErrorRegister()
+			{
+				$_SESSION[User::ERROR_REGISTER] = NULL;
+			}
+			// Cryptografar senha 
+			public static function getPasswordHash($password){
+				return password_hash ($password, PASSWORD_DEFAULT, [
+					'cost'=>12
+				]);
 			}
 				
 }

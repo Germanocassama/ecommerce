@@ -166,10 +166,10 @@ class Cart extends Model {
 			if ($totals['vlheight'] < 2) $totals['vlheight'] = 2;
 			if ($totals['vllength'] < 16) $totals['vllength'] = 16;
 			// calcular freid
-			$qs = http_build_query([
+			$qs = http_build_query([  //http_build_query — Gera a string de consulta (query) em formato URL
 				'nCdEmpresa'=>'',
 				'sDsSenha'=>'',
-				'nCdServico'=>'40010',
+				'nCdServico'=>'40010', // codigo postal 
 				'sCepOrigem'=>'09853120',
 				'sCepDestino'=>$nrzipcode,
 				'nVlPeso'=>$totals['vlweight'],
@@ -183,6 +183,8 @@ class Cart extends Model {
 				'sCdAvisoRecebimento'=>'S'
 			]);
 			// api xml para calculo de freid
+			// simplexml_load_file - Interpreta um arquivo XML em um objeto
+			// EX: 'http://example.com/?a='. Urlencode ('b & c'))
 			$xml = simplexml_load_file("http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx/CalcPrecoPrazo?".$qs);
 			$result = $xml->Servicos->cServico;
 			if ($result->MsgErro != '') {
@@ -198,6 +200,8 @@ class Cart extends Model {
 		} else {
 		}
 	}
+
+	// Formatar valor para decimal 
 	public static function formatValueToDecimal($value):float
 	{
 		$value = str_replace('.', '', $value); // substituir ponto por vazio
@@ -233,13 +237,14 @@ class Cart extends Model {
 
 	}
 
-	// Total e subtotal
+	// Calcular Total e subtotal
 	public function getValues()
 	{
 		$this->getCalculateTotal();
 		return parent::getValues(); // herdar funçoes do getValues 
 	}
 
+	// Obter calculode de total
 	public function getCalculateTotal()
 	{
 		$this->updateFreight(); // atualizar freid

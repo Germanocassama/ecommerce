@@ -99,7 +99,7 @@
                                         <tbody>
                                             <tr class="cart-subtotal">
                                                 <th>Subtotal</th>
-                                                <td><span class="amount"><?php echo formatPrice($cart["vlsubtotal"]); ?>€</span></td>
+                                                <td><span class="amount"><?php echo formatPrice($cart["vlsubtotal"]); ?></span></td>
                                             </tr>
 
                                              <tr class="shipping">

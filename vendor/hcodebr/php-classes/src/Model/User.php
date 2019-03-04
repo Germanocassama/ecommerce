@@ -80,20 +80,18 @@ use \Hcode\Mailer;
 				throw new \Exception("Usuário inexistente ou senha inválida.");
 			}
 		}
-
-
-
 				
 		// função logout
 		public static function logout()
 		{
 				$_SESSION[User::SESSION] = NULL;
 		}
+		// listar usuarios 
 		public static function listAll(){
 			$sql = new sql();
 			return $sql->select("SELECT * FROM  tb_users a INNER JOIN tb_persons b USING(idperson) ORDER BY b.desperson");
 		}
-		//
+		//salvar dados de usuario e mostrar 
 		public function save()
 		{
 		$sql = new Sql();
@@ -195,7 +193,7 @@ use \Hcode\Mailer;
 			         }
 			     }
 			 }
-			
+			// encryptar dados de usuário 
 			 public static function validForgotDecrypt($result)
 			 {
 			     $result = base64_decode($result);
@@ -246,35 +244,49 @@ use \Hcode\Mailer;
 			}
 
 			// verificar erros 
-			public static function setError($msg)
+			public static function setError($msg)// informar erro
 			{
 				$_SESSION[User::ERROR] = $msg;
 			}
-			public static function getError()
-			{
+			public static function getError()// capturar erro 
+			{   // verificar se existe este erro esta definido e não esta vazio, se existir retorna o erro se não vazio 
 				$msg = (isset($_SESSION[User::ERROR]) && $_SESSION[User::ERROR]) ? $_SESSION[User::ERROR] : '';
 				User::clearError();
 				return $msg;
 			}
-			public static function clearError()
+			public static function clearError()// limpar erro 
 			{
 				$_SESSION[User::ERROR] = NULL;
 			}
-			public static function getErrorRegister()
+			public static function setErrorRegister($msg) // verificar erro no registo
+			{
+				$_SESSION[User::ERROR_REGISTER] = $msg;
+			}
+			public static function getErrorRegister()// obter registo de erro
 			{
 				$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
 				User::clearErrorRegister();
 				return $msg;
 			}
-			public static function clearErrorRegister()
+			public static function clearErrorRegister()// limpar registo de erro
 			{
 				$_SESSION[User::ERROR_REGISTER] = NULL;
 			}
-			// Cryptografar senha 
-			public static function getPasswordHash($password){
+			//Cryptografar senha 
+			public static function getPasswordHash($password)
+			{ 
 				return password_hash ($password, PASSWORD_DEFAULT, [
 					'cost'=>12
 				]);
+			}
+			// verificar se usuário já existe 
+			public static function checkLoginExist($login){
+				$sql = new sql();
+				$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin",[
+					':deslogin'=>$login
+				]);
+				return (count($results) > 0);
+
 			}
 				
 }

@@ -9,7 +9,7 @@ class Cart extends Model {
 	const SESSION_ERROR = "CartError";
 
 		// verificar se existe session
-		public static function getFromSession()
+	public static function getFromSession()
 	{
 		$cart = new Cart();
 
@@ -46,7 +46,7 @@ class Cart extends Model {
 
 		}
 
-
+		// obter sessão 
 		public function getFromSessionID(){
 			$sql = new sql();
 
@@ -60,7 +60,7 @@ class Cart extends Model {
 			}
 			
 		}
-
+		// salvar dados 
 		public function save(){
 			$sql = new sql();
 			$results = $sql->select(" CALL sp_carts_save(:idcart, :dessessionid, :iduser, :deszipcode, :vlfreight, :nrdays)",
@@ -121,6 +121,7 @@ class Cart extends Model {
 		return Product::checkList($rows);
 	}
 
+	// obter id do produto no carrinho
 	public function get(int $idcart)
 	{
 	 
